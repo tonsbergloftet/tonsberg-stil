@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tønsbergløftet — Designsystem for HTML-presentasjoner</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700;800&family=Square+Peg&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:      #013952;
+  --navy-bg:   #e8eff3;
+  --sage:      #c5daaf;
+  --sage-bg:   #f0f5ea;
+  --rust:      #923c3d;
+  --rust-bg:   #f3e4e4;
+  --salmon:    #e69d7d;
+  --amber:     #f1be48;
+  --amber-bg:  #fdf5dc;
+  --sky:       #91cef2;
+  --sky-bg:    #e8f5fd;
+  --green:     #00714e;
+  --green-bg:  #e0f2ec;
+  --gray:      #4a4a49;
+  --white:     #ffffff;
+  --bg:        #f7f8f9;
+  --ink:       #1a1a1a;
+  --ink-mid:   #3d3d3d;
+  --ink-dim:   #666666;
+  --border:    rgba(1,57,82,0.12);
+  --serif:     "Barlow", system-ui, sans-serif;
+  --hand:      "Square Peg", cursive;
+}
+body {
+  font-family: var(--serif);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+}
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+}
+header {
+  background: var(--navy);
+  color: white;
+  padding: 48px 32px;
+  margin-bottom: 48px;
+}
+header .inner { max-width: 860px; margin: 0 auto; }
+header .kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 12px;
+}
+header h1 {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+header h1 span {
+  font-family: var(--hand);
+  font-weight: 400;
+  color: var(--sage);
+  display: block;
+  font-size: 0.85em;
+}
+header p {
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  max-width: 560px;
+  line-height: 1.65;
+}
+h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  margin: 48px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 24px 0 8px;
+}
+p { font-size: 15px; font-weight: 300; color: var(--ink-mid); margin-bottom: 12px; line-height: 1.7; }
+code {
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: 13px;
+  background: var(--navy-bg);
+  color: var(--navy);
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+pre {
+  background: #0f1f2a;
+  color: #c5daaf;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 20px 24px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 12px 0 20px;
+}
+.note {
+  background: var(--amber-bg);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #8a6900;
+  margin: 16px 0;
+}
+/* Fargeswatch */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 16px 0 24px;
+}
+.swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.swatch-color { height: 48px; }
+.swatch-info {
+  background: white;
+  padding: 8px 10px;
+}
+.swatch-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+.swatch-hex { font-family: monospace; font-size: 11px; color: var(--ink-dim); }
+/* Komponenteksempler */
+.component-demo {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 12px 0 20px;
+}
+/* Tabell */
+table { width: 100%; border-collapse: collapse; margin: 12px 0 24px; font-size: 14px; }
+th {
+  background: var(--navy);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--ink-mid); font-weight: 300; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: var(--bg); }
+/* Navigasjon */
+nav {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+nav a {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  transition: background 0.15s;
+}
+nav a:hover { background: var(--navy-bg); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div class="kicker">Tønsbergløftet · Tønsberg kommune</div>
+    <h1>Designsystem<span>for HTML-presentasjoner</span></h1>
+    <p>Dette er stilguiden for Tønsbergløftet sine HTML-presentasjoner. Bruk tokens, komponenter og prinsipper herfra når du bygger presentasjoner for kommunen.</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <nav>
+    <a href="#farger">Farger</a>
+    <a href="#fonter">Fonter</a>
+    <a href="#struktur">Struktur</a>
+    <a href="#komponenter">Komponenter</a>
+    <a href="#prinsipper">Prinsipper</a>
+    <a href="#eksempel">Referanseeksempel</a>
+  </nav>
+
+  <!-- ══ FARGER ══ -->
+  <h2 id="farger">Farger</h2>
+  <p>Tønsberg kommunes grafiske profil (2024). Navy er primærfargen — brukes til overskrifter, topbar og bølgeelement. Sage er kommunens sekundærfarge.</p>
+
+  <h3>Hovedfarger</h3>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-color" style="background:#013952"></div><div class="swatch-info"><div class="swatch-name">Navy</div><div class="swatch-hex">#013952</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#c5daaf"></div><div class="swatch-info"><div class="swatch-name">Sage</div><div class="swatch-hex">#c5daaf</div></div></div>
+  </div>
+
+  <h3>Støttefarger</h3>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-color" style="background:#923c3d"></div><div class="swatch-info"><div class="swatch-name">Rust</div><div class="swatch-hex">#923c3d</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e69d7d"></div><div class="swatch-info"><div class="swatch-name">Salmon</div><div class="swatch-hex">#e69d7d</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#f1be48"></div><div class="swatch-info"><div class="swatch-name">Amber</div><div class="swatch-hex">#f1be48</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#91cef2"></div><div class="swatch-info"><div class="swatch-name">Sky</div><div class="swatch-hex">#91cef2</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#00714e"></div><div class="swatch-info"><div class="swatch-name">Green</div><div class="swatch-hex">#00714e</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#4a4a49"></div><div class="swatch-info"><div class="swatch-name">Gray</div><div class="swatch-hex">#4a4a49</div></div></div>
+  </div>
+
+  <h3>Bakgrunner og nøytraler</h3>
+  <div class="swatches">
+    <div class="swatch"><div class="swatch-color" style="background:#f7f8f9;border-bottom:1px solid #eee"></div><div class="swatch-info"><div class="swatch-name">Bakgrunn</div><div class="swatch-hex">#f7f8f9</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ffffff;border-bottom:1px solid #eee"></div><div class="swatch-info"><div class="swatch-name">Hvit</div><div class="swatch-hex">#ffffff</div></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e8eff3"></div><div class="swatch-info"><div class="swatch-name">Navy lys</div><div class="swatch-hex">#e8eff3</div></div></div>
+  </div>
+
+  <h3>Trafikklys — bevegelsesmåling</h3>
+  <p>Brukes konsekvent i dashboards og bevegelsesmålere.</p>
+  <table>
+    <tr><th>Tilstand</th><th>Farge</th><th>Hex</th><th>Bakgrunn</th></tr>
+    <tr><td>Uholdbar / negativ</td><td><span style="color:#923c3d;font-weight:700">Rust</span></td><td><code>#923c3d</code></td><td><code>#f3e4e4</code></td></tr>
+    <tr><td>Utsatt / mellom</td><td><span style="color:#8a6900;font-weight:700">Amber</span></td><td><code>#f1be48</code></td><td><code>#fdf5dc</code></td></tr>
+    <tr><td>Stabil / positiv</td><td><span style="color:#00714e;font-weight:700">Green</span></td><td><code>#00714e</code></td><td><code>#e0f2ec</code></td></tr>
+  </table>
+
+  <h3>CSS-variabler</h3>
+  <p>Kopier dette inn i <code>&lt;style&gt;</code>-taggen på alle presentasjoner:</p>
+  <pre>:root {
+  --navy:      #013952;
+  --navy-bg:   #e8eff3;
+  --sage:      #c5daaf;
+  --sage-bg:   #f0f5ea;
+  --rust:      #923c3d;
+  --rust-bg:   #f3e4e4;
+  --amber:     #f1be48;
+  --amber-bg:  #fdf5dc;
+  --sky:       #91cef2;
+  --sky-bg:    #e8f5fd;
+  --green:     #00714e;
+  --green-bg:  #e0f2ec;
+  --gray:      #4a4a49;
+  --white:     #ffffff;
+  --bg:        #f7f8f9;
+  --ink:       #1a1a1a;
+  --ink-mid:   #3d3d3d;
+  --ink-dim:   #666666;
+  --border:    rgba(1,57,82,0.12);
+  --serif:     "Barlow", system-ui, sans-serif;
+  --hand:      "Square Peg", cursive;
+}</pre>
+
+  <!-- ══ FONTER ══ -->
+  <h2 id="fonter">Fonter</h2>
+
+  <h3>Barlow — profilfont</h3>
+  <p>Brukes til all tekst. Alltid last inn fra Google Fonts.</p>
+  <pre>&lt;link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Square+Peg&display=swap" rel="stylesheet"&gt;</pre>
+
+  <div class="component-demo">
+    <div style="font-family:'Barlow',sans-serif;font-size:40px;font-weight:800;color:#013952;line-height:1.1;margin-bottom:8px">Barlow ExtraBold 800</div>
+    <div style="font-family:'Barlow',sans-serif;font-size:24px;font-weight:700;color:#013952;margin-bottom:8px">Barlow Bold 700</div>
+    <div style="font-family:'Barlow',sans-serif;font-size:16px;font-weight:400;color:#3d3d3d;margin-bottom:8px">Barlow Regular 400 — brødtekst og ingress</div>
+    <div style="font-family:'Barlow',sans-serif;font-size:15px;font-weight:300;color:#666;margin-bottom:8px">Barlow Light 300 — hjelpetekst og metadata</div>
+    <div style="font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#013952">BARLOW SEMIBOLD 600 UPPERCASE — etiketter og tags</div>
+  </div>
+
+  <h3>Square Peg — håndskriftfont</h3>
+  <p>Brukes som innslag i overskrifter for å gi et menneskelig, uformelt uttrykk. Aldri som primærfont for lesbar tekst.</p>
+
+  <div class="component-demo">
+    <div style="font-family:'Barlow',sans-serif;font-size:36px;font-weight:800;color:#013952;line-height:1.15">Vi har sluttet å behandle utenforskap som</div>
+    <div style="font-family:'Square Peg',cursive;font-size:54px;color:#013952;opacity:0.65;line-height:1.1">summen av enkelttiltak</div>
+  </div>
+
+  <p>Bruk Square Peg kun til:</p>
+  <table>
+    <tr><th>Bruksområde</th><th>Størrelse</th><th>Farge</th></tr>
+    <tr><td>Innslag i H2 — egen linje under Barlow</td><td>1.7em relativt til H2</td><td>--navy, opacity 0.65</td></tr>
+    <tr><td>Innslag i hero H1</td><td>0.85em relativt til H1</td><td>--sage, opacity 0.9</td></tr>
+    <tr><td>Neste-knapp</td><td>20px</td><td>--navy</td></tr>
+    <tr><td>Numre i spørsmålsblokk og veivalg</td><td>22–30px</td><td>--navy, lav opacity</td></tr>
+  </table>
+
+  <!-- ══ STRUKTUR ══ -->
+  <h2 id="struktur">Struktur</h2>
+
+  <h3>Scroll-snap presentasjon</h3>
+  <p>Alle presentasjoner bruker scroll-snap. Én slide = ett poeng. Alltid en Neste-knapp nederst.</p>
+
+  <pre>&lt;!-- Grunnstruktur --&gt;
+&lt;div class="slides" id="slides"&gt;
+  &lt;section class="slide" data-index="0"&gt;
+    &lt;div class="slide-inner"&gt;
+      &lt;!-- innhold --&gt;
+    &lt;/div&gt;
+    &lt;button class="next-btn" onclick="goNext(0)"&gt;↓ Neste&lt;/button&gt;
+  &lt;/section&gt;
+&lt;/div&gt;</pre>
+
+  <pre>/* Nødvendig CSS */
+html, body { height: 100%; overflow: hidden; }
+
+.slides {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.slide {
+  scroll-snap-align: start;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.slide-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 60px 36px 100px;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+}</pre>
+
+  <h3>Bølgedekor — kommunens signaturelement</h3>
+  <p>Alle slides har en mørkeblå bølge i bunnen og et gjennomskinnelig sage-slør øverst til høyre.</p>
+
+  <pre>/* Bunnbølge */
+.slide::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 90px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath fill='%23013952' d='M0,60 C240,90 480,20 720,50 C960,80 1200,30 1440,55 L1440,90 L0,90 Z'/%3E%3C/svg%3E")
+    center bottom / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Slør øverst til høyre */
+.slide::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 260px; height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 120'%3E%3Cpath fill='%23c5daaf' fill-opacity='0.25' d='M60,0 C120,30 180,10 260,40 L260,0 Z'/%3E%3C/svg%3E")
+    top right / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 1;
+}</pre>
+
+  <!-- ══ KOMPONENTER ══ -->
+  <h2 id="komponenter">Komponenter</h2>
+  <p>Bruk disse komponentene fremfor å finne opp hjulet på nytt. Alle er testet og fungerer i Presenti.</p>
+
+  <h3>Slide-tag</h3>
+  <p>Øverst på alle slides. Amber dot + uppercase tekst.</p>
+  <div class="component-demo">
+    <div style="font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#013952;display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:#f1be48;display:inline-block;flex-shrink:0"></span>SYSTEMSKIFTET</div>
+  </div>
+  <pre>&lt;div class="slide-tag"&gt;Emne&lt;/div&gt;
+
+.slide-tag {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--navy); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.slide-tag::before {
+  content: ''; display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--amber); flex-shrink: 0;
+}</pre>
+
+  <h3>Callout</h3>
+  <p>Sage-grønn venstrelinje. Brukes til sitater, nøkkelpoeng og oppsummeringer.</p>
+  <div class="component-demo">
+    <div style="background:#f0f5ea;border-left:3px solid #00714e;border-radius:0 12px 12px 0;padding:14px 18px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:400;font-style:italic;color:#013952;line-height:1.65">Det handler ikke om mer innsats. Det handler om å koble innsatsen bedre — slik at barn, unge og familier slipper å være prosjektleder for eget liv.</div>
+  </div>
+  <pre>&lt;div class="callout"&gt;Nøkkelpoeng her.&lt;/div&gt;
+
+.callout {
+  background: var(--sage-bg);
+  border-left: 3px solid var(--green);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  font-size: 15px; font-weight: 400;
+  font-style: italic; color: var(--navy);
+  line-height: 1.65; margin: 16px 0;
+}</pre>
+
+  <h3>Status-tags</h3>
+  <p>Trafikklys for bevegelsesmålinger og dashboards.</p>
+  <div class="component-demo" style="display:flex;gap:10px;flex-wrap:wrap">
+    <span style="background:#f3e4e4;color:#923c3d;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px">Uholdbar</span>
+    <span style="background:#fdf5dc;color:#8a6900;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px">Utsatt</span>
+    <span style="background:#e0f2ec;color:#00714e;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px">Stabil</span>
+    <span style="background:#e0f2ec;color:#00714e;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px">Bærekraftig</span>
+  </div>
+  <pre>&lt;span class="status-tag tag-red"&gt;Uholdbar&lt;/span&gt;
+&lt;span class="status-tag tag-yellow"&gt;Utsatt&lt;/span&gt;
+&lt;span class="status-tag tag-green"&gt;Stabil&lt;/span&gt;
+
+.status-tag { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+.tag-red    { background: var(--rust-bg);  color: var(--rust); }
+.tag-yellow { background: var(--amber-bg); color: #8a6900; }
+.tag-green  { background: var(--green-bg); color: var(--green); }</pre>
+
+  <h3>Kort-grid (hvite kort)</h3>
+  <p>Hvite kort på lys bakgrunn. Brukes til lister, kategorier og oversikter.</p>
+  <div class="component-demo">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div style="background:white;border:1px solid rgba(1,57,82,0.12);border-radius:16px;padding:16px">
+        <div style="font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;color:#013952;margin-bottom:8px">Tittel</div>
+        <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#666;font-weight:300;line-height:1.5">Beskrivelse av innholdet i dette kortet.</div>
+      </div>
+      <div style="background:white;border:1px solid rgba(1,57,82,0.12);border-radius:16px;padding:16px">
+        <div style="font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;color:#013952;margin-bottom:8px">Tittel</div>
+        <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#666;font-weight:300;line-height:1.5">Beskrivelse av innholdet i dette kortet.</div>
+      </div>
+      <div style="background:white;border:1px solid rgba(1,57,82,0.12);border-radius:16px;padding:16px">
+        <div style="font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;color:#013952;margin-bottom:8px">Tittel</div>
+        <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#666;font-weight:300;line-height:1.5">Beskrivelse av innholdet i dette kortet.</div>
+      </div>
+    </div>
+  </div>
+  <pre>&lt;div class="three-col"&gt;
+  &lt;div class="col-card"&gt;
+    &lt;div class="col-title"&gt;Tittel&lt;/div&gt;
+    &lt;ul class="col-list"&gt;&lt;li&gt;Punkt&lt;/li&gt;&lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
+.col-card  { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 18px 16px; }
+.col-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }</pre>
+
+  <h3>Neste-knapp</h3>
+  <p>Alltid tilstede nederst på hver slide. Bruker Square Peg-font.</p>
+  <div class="component-demo">
+    <button style="background:rgba(255,255,255,0.85);border:1.5px solid rgba(1,57,82,0.12);border-radius:40px;padding:7px 20px;font-family:'Square Peg',cursive;font-size:20px;color:#013952;cursor:pointer;display:inline-flex;align-items:center;gap:8px">↓ Neste</button>
+  </div>
+  <pre>&lt;button class="next-btn" onclick="goNext(N)"&gt;↓ Neste&lt;/button&gt;
+
+.next-btn {
+  position: absolute; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.85);
+  border: 1.5px solid var(--border);
+  border-radius: 40px; padding: 7px 20px;
+  font-family: var(--hand); font-size: 20px;
+  color: var(--navy); cursor: pointer;
+  backdrop-filter: blur(4px); z-index: 15;
+}</pre>
+
+  <h3>Spørsmålsblokk (avslutning)</h3>
+  <p>Navy bakgrunn. Brukes alltid som avslutningselement på siste slide.</p>
+  <div class="component-demo" style="background:#013952;border-radius:18px;padding:24px">
+    <div style="font-family:'Square Peg',cursive;font-size:18px;color:rgba(255,255,255,0.55);margin-bottom:14px">Tre spørsmål å lande på</div>
+    <div style="display:grid;grid-template-columns:26px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.12)">
+      <span style="font-family:'Square Peg',cursive;font-size:22px;color:rgba(255,255,255,0.3)">1</span>
+      <span style="font-family:'Barlow',sans-serif;font-size:14px;font-style:italic;color:white;font-weight:300;line-height:1.55">Hva skal kommunen prioritere i neste periode?</span>
+    </div>
+  </div>
+  <pre>&lt;div class="q-block"&gt;
+  &lt;div class="q-eyebrow"&gt;Tre spørsmål å lande på&lt;/div&gt;
+  &lt;div class="q-item"&gt;
+    &lt;span class="q-num"&gt;1&lt;/span&gt;
+    &lt;span class="q-text"&gt;Spørsmål her.&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+.q-block    { background: var(--navy); border-radius: 18px; padding: 30px 28px; }
+.q-eyebrow  { font-family: var(--hand); font-size: 18px; color: rgba(255,255,255,0.55); margin-bottom: 18px; }
+.q-item     { display: grid; grid-template-columns: 26px 1fr; gap: 14px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.12); }
+.q-num      { font-family: var(--hand); font-size: 22px; color: rgba(255,255,255,0.3); }
+.q-text     { font-size: 15px; font-style: italic; color: white; font-weight: 300; line-height: 1.55; }</pre>
+
+  <!-- ══ PRINSIPPER ══ -->
+  <h2 id="prinsipper">Prinsipper</h2>
+
+  <h3>Innhold</h3>
+  <table>
+    <tr><th>Prinsipp</th><th>Detalj</th></tr>
+    <tr><td>Én overskrift per slide</td><td>Bærer ett poeng alene. Overskriften er en påstand, ikke et temaord.</td></tr>
+    <tr><td>Alltid en visuell komponent</td><td>Aldri bare tekst og overskrift. Bruk kort, tabell, bevegelsesmåler eller dashboard.</td></tr>
+    <tr><td>Callout til nøkkelsetningen</td><td>Den setningen deltakerne skal huske går i callout.</td></tr>
+    <tr><td>Spørsmålsblokk avslutter</td><td>Siste slide er alltid refleksjonsspørsmål, ikke konklusjon.</td></tr>
+    <tr><td>Norsk bokmål</td><td>Kort og direkte språk. Brødtekst maks 3 setninger utenfor komponenter.</td></tr>
+  </table>
+
+  <h3>Visuelt</h3>
+  <table>
+    <tr><th>Prinsipp</th><th>Detalj</th></tr>
+    <tr><td>Square Peg som innslag</td><td>Aldri som primærfont. Kun til overskriftsinnslag, knapper og numre.</td></tr>
+    <tr><td>Trafikklys konsekvent</td><td>Rust = problem, amber = mellom, green = positiv. Aldri andre farger for status.</td></tr>
+    <tr><td>Navy er autoritær</td><td>Brukes til alt strukturelt — topbar, bølge, overskrifter.</td></tr>
+    <tr><td>Sage er varm</td><td>Brukes til bølger, callout og sekundære elementer.</td></tr>
+    <tr><td>Illustrasjoner fremfor emoji</td><td>Emoji kun i kortkomponenter. Aldri fritt i layouten.</td></tr>
+  </table>
+
+  <h3>Illustrasjoner</h3>
+  <div class="note">
+    Bildebank og placeholder-bilde ligger i <code>/illustrations/</code>-mappen i dette repoet.
+    Bruk alltid <code>&lt;img src="[URL]" class="slide-img"&gt;</code> med <code>mix-blend-mode: multiply</code> på lys bakgrunn.
+  </div>
+  <pre>.slide-img {
+  width: 100%;
+  border-radius: 16px;
+  display: block;
+  mix-blend-mode: multiply;
+}</pre>
+
+  <!-- ══ EKSEMPEL ══ -->
+  <h2 id="eksempel">Referanseeksempel</h2>
+  <p>Se en fullstendig implementasjon av alle komponentene i praksis:</p>
+  <div class="component-demo" style="text-align:center;padding:32px">
+    <a href="examples/veien-inn-tønsberg.html" target="_blank" style="display:inline-block;background:#013952;color:white;font-family:'Barlow',sans-serif;font-size:15px;font-weight:600;padding:12px 28px;border-radius:10px;text-decoration:none">Åpne referanseeksempel →</a>
+    <p style="margin-top:12px;font-size:13px;color:#888">«Veien inn» — komplett presentasjon med alle komponenter</p>
+  </div>
+
+  <div class="note">
+    Spørsmål eller forslag til stilguiden? Ta kontakt med Tønsbergløftet.
+  </div>
+
+</div>
+</body>
+</html>
