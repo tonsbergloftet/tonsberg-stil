@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>Veien inn — Fremtidsscenario 2028</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,600&family=Square+Peg&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { color-scheme: only light; }
+
+:root {
+  /* Tønsberg kommune fargepalett */
+  --navy:       #013952;
+  --navy-bg:    #e8eff3;
+  --sage:       #c5daaf;
+  --sage-dark:  #7a9e5f;
+  --sage-bg:    #f0f5ea;
+  --rust:       #923c3d;
+  --rust-bg:    #f3e4e4;
+  --salmon:     #e69d7d;
+  --salmon-bg:  #fdf0e8;
+  --amber:      #f1be48;
+  --amber-bg:   #fdf5dc;
+  --sky:        #91cef2;
+  --sky-bg:     #e8f5fd;
+  --green:      #00714e;
+  --green-bg:   #e0f2ec;
+  --gray:       #4a4a49;
+  --gray-light: #f5f5f5;
+  --white:      #ffffff;
+  --bg:         #f7f8f9;
+  --ink:        #1a1a1a;
+  --ink-mid:    #3d3d3d;
+  --ink-dim:    #666666;
+  --border:     rgba(1,57,82,0.12);
+
+  /* Typografi */
+  --serif:  "Barlow", system-ui, sans-serif;
+  --hand:   "Square Peg", cursive;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+.slides {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide {
+  scroll-snap-align: start;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden; /* klipper slør og bølger ved kanten */
+}
+
+/* Bølgedekor – kommunens signaturelement */
+.slide::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath fill='%23013952' fill-opacity='1' d='M0,60 C240,90 480,20 720,50 C960,80 1200,30 1440,55 L1440,90 L0,90 Z'/%3E%3C/svg%3E")
+    center bottom / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Slør – gjennomskinnelig bølgedekor øverst til høyre */
+.slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 120px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 120'%3E%3Cpath fill='%23c5daaf' fill-opacity='0.25' d='M60,0 C120,30 180,10 260,40 L260,0 Z'/%3E%3C/svg%3E")
+    top right / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.slide-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 60px 36px 100px;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+}
+
+/* NAV-PUNKTER */
+.nav-dots {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  z-index: 100;
+}
+.nav-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(1,57,82,0.2);
+  cursor: pointer; border: none; padding: 0;
+  transition: background 0.2s, transform 0.2s;
+  position: relative;
+}
+.nav-dot:hover { background: var(--navy); transform: scale(1.3); }
+.nav-dot.active { background: var(--navy); transform: scale(1.2); }
+.nav-dot-tooltip {
+  position: absolute; right: 18px; top: 50%;
+  transform: translateY(-50%);
+  background: var(--navy); color: #fff;
+  font-family: var(--serif); font-size: 11px;
+  padding: 4px 8px; border-radius: 20px;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity 0.15s;
+  letter-spacing: 0.02em;
+}
+.nav-dot:hover .nav-dot-tooltip { opacity: 1; }
+
+/* NESTE-KNAPP */
+.next-btn {
+  position: absolute; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.85);
+  border: 1.5px solid var(--border);
+  border-radius: 40px; padding: 7px 20px;
+  font-family: var(--hand); font-size: 20px;
+  color: var(--navy); cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  backdrop-filter: blur(4px);
+  z-index: 15;
+  letter-spacing: 0.03em;
+}
+.next-btn:hover {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
+
+/* TYPOGRAFI */
+.slide-tag {
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.slide-tag::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+.slide h2 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.5vw, 48px);
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.slide h2 .hand {
+  font-family: var(--hand);
+  font-weight: 400;
+  font-size: 1.7em;
+  color: var(--navy);
+  display: block;
+  line-height: 1.15;
+  margin-top: -2px;
+  opacity: 0.65;
+}
+
+.slide p {
+  font-family: var(--serif);
+  color: var(--ink-mid);
+  line-height: 1.7;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.lead {
+  font-size: 17px !important;
+  font-weight: 400 !important;
+  color: var(--ink) !important;
+  line-height: 1.65 !important;
+}
+
+.callout {
+  background: var(--sage-bg);
+  border-left: 3px solid var(--green);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--navy);
+  line-height: 1.65;
+  margin: 16px 0;
+}
+
+/* ══ HERO ══ */
+.slide-hero { background: var(--navy); }
+.slide-hero::before { display: none; }
+.slide-hero::after {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath fill='%23c5daaf' fill-opacity='0.4' d='M0,60 C240,90 480,20 720,50 C960,80 1200,30 1440,55 L1440,90 L0,90 Z'/%3E%3C/svg%3E") center bottom / 100% 100% no-repeat;
+}
+
+.slide-hero .slide-inner { align-items: center; text-align: center; }
+.hero-kicker {
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 20px;
+}
+.slide-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(56px, 12vw, 104px);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.0;
+  margin-bottom: 8px;
+}
+.slide-hero h1 .hand {
+  font-family: var(--hand);
+  font-weight: 400;
+  color: var(--sage);
+  display: block;
+  font-size: 0.85em;
+  line-height: 1.1;
+  opacity: 0.9;
+}
+.slide-hero .hero-sub {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+  color: #ffffff !important;
+  max-width: 480px;
+  line-height: 1.65;
+  margin-bottom: 36px;
+}
+.hero-facts {
+  display: flex;
+  border: 1px solid rgba(197,218,175,0.35);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+}
+.fact { padding: 14px 24px; border-right: 1px solid rgba(197,218,175,0.25); text-align: center; }
+.fact:last-child { border-right: none; }
+.fact-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--sage); margin-bottom: 5px; font-weight: 600; }
+.fact-value { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--white); }
+
+.slide-hero .next-btn {
+  background: rgba(197,218,175,0.2);
+  border-color: rgba(197,218,175,0.4);
+  color: var(--sage);
+}
+.slide-hero .next-btn:hover {
+  background: var(--sage);
+  color: var(--navy);
+  border-color: var(--sage);
+}
+
+/* ══ TRE KOLONNER ══ */
+.three-col {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px; margin-top: 20px;
+}
+.col-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 16px;
+}
+.col-icon { font-size: 22px; margin-bottom: 8px; }
+.col-title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.col-list { list-style: none; }
+.col-list li {
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink-mid);
+  padding: 5px 0;
+  border-top: 1px solid var(--border);
+  line-height: 1.45;
+  font-weight: 300;
+}
+.col-list li:first-child { border-top: none; }
+
+/* ══ MÅL-GRID ══ */
+.goals-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-top: 20px;
+}
+.goal-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 18px;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.goal-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 18px;
+}
+.g1 .goal-icon { background: var(--sky-bg); }
+.g2 .goal-icon { background: var(--sage-bg); }
+.g3 .goal-icon { background: var(--amber-bg); }
+.g4 .goal-icon { background: var(--rust-bg); }
+
+.goal-num {
+  font-family: var(--hand);
+  font-size: 36px;
+  color: var(--navy);
+  opacity: 0.15;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.goal-title {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+.goal-meta { font-size: 11px; color: var(--ink-dim); line-height: 1.6; font-weight: 300; }
+
+/* ══ SYSTEMMODELL ══ */
+.system-model { margin-top: 24px; }
+.system-flow {
+  display: flex; align-items: stretch;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.sf-block {
+  flex: 1; padding: 18px 14px;
+  border-right: 1px solid var(--border);
+}
+.sf-block:last-child { border-right: none; }
+.sf-label {
+  font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.13em; color: var(--ink-dim);
+  margin-bottom: 6px; font-weight: 600;
+}
+.sf-title {
+  font-family: var(--serif);
+  font-size: 15px; font-weight: 700;
+  color: var(--navy); margin-bottom: 10px;
+}
+.sf-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.sf-chip {
+  font-size: 10px; padding: 3px 9px; border-radius: 20px;
+  background: var(--gray-light); color: var(--ink-mid);
+  border: 1px solid var(--border);
+  font-weight: 400;
+}
+.sf-chip.rust { background: var(--rust-bg); color: var(--rust); border-color: transparent; }
+.sf-chip.amber { background: var(--amber-bg); color: #8a6900; border-color: transparent; }
+.sf-chip.green { background: var(--green-bg); color: var(--green); border-color: transparent; }
+.sf-arrow {
+  display: flex; align-items: center; padding: 0 8px;
+  color: var(--ink-dim); font-size: 18px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  font-weight: 300;
+}
+
+/* ══ BEVEGELSE ══ */
+.movement-track { margin-top: 28px; position: relative; }
+.movement-spine {
+  position: absolute; top: 28px; left: 28px; right: 28px;
+  height: 2px; background: var(--border); z-index: 0;
+}
+.movement-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--rust), var(--amber), var(--sage-dark), var(--green));
+  width: 0%; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); border-radius: 2px;
+}
+.slide.in-view .movement-fill { width: 100%; }
+.movement-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px; position: relative; z-index: 1;
+}
+.m-step {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px 12px;
+  opacity: 0; transform: translateY(16px);
+}
+.slide.in-view .m-step:nth-child(1) { animation: stepIn 0.45s 0.05s ease forwards; }
+.slide.in-view .m-step:nth-child(2) { animation: stepIn 0.45s 0.2s  ease forwards; }
+.slide.in-view .m-step:nth-child(3) { animation: stepIn 0.45s 0.35s ease forwards; }
+.slide.in-view .m-step:nth-child(4) { animation: stepIn 0.45s 0.5s  ease forwards; }
+@keyframes stepIn { to { opacity: 1; transform: translateY(0); } }
+
+.m-dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  margin: 0 auto 10px; border: 2px solid;
+}
+.m-dot-rust  { border-color: var(--rust);  background: var(--rust-bg); }
+.m-dot-amber { border-color: #c49a00; background: var(--amber-bg); }
+.m-dot-mid   { border-color: #999; background: #eee; }
+.m-dot-green { border-color: var(--green); background: var(--green-bg); }
+
+.m-badge {
+  font-size: 10px; font-weight: 600; padding: 3px 9px;
+  border-radius: 20px; margin-bottom: 7px; display: inline-block;
+  letter-spacing: 0.02em;
+}
+.m-rust-b  { background: var(--rust-bg);  color: var(--rust); }
+.m-amber-b { background: var(--amber-bg); color: #8a6900; }
+.m-mid-b   { background: #eee; color: #666; }
+.m-green-b { background: var(--green-bg); color: var(--green); }
+
+.m-title {
+  font-family: var(--serif); font-size: 14px;
+  font-weight: 700; color: var(--navy); margin-bottom: 4px;
+}
+.m-desc { font-size: 10px; color: var(--ink-dim); line-height: 1.55; font-weight: 300; }
+
+.movement-arrows {
+  display: flex; justify-content: space-between;
+  padding: 0 calc(25% - 10px); margin: 5px 0 0;
+  pointer-events: none;
+}
+.m-arrow { font-size: 16px; color: var(--ink-dim); }
+
+/* ══ TRE NIVÅER ══ */
+.levels-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px; margin-top: 20px;
+}
+.level-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px 16px;
+}
+.level-who {
+  font-family: var(--serif); font-size: 13px;
+  font-weight: 700; color: var(--navy); margin-bottom: 10px;
+}
+.level-point {
+  font-family: var(--serif);
+  font-size: 12px; color: var(--ink-mid); line-height: 1.65;
+  padding: 6px 0; border-bottom: 1px solid var(--border);
+  font-weight: 300;
+}
+.level-point:last-child { border-bottom: none; }
+
+/* ══ DASHBOARD ══ */
+.dash {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden; margin-top: 20px;
+}
+.dash-head {
+  padding: 13px 20px; background: var(--navy);
+  border-bottom: 1px solid var(--border);
+}
+.dash-head-title {
+  font-family: var(--serif); font-size: 16px;
+  font-weight: 700; color: var(--white);
+}
+.dash-row {
+  display: grid; grid-template-columns: 150px 1fr auto;
+  gap: 12px; padding: 12px 20px;
+  border-bottom: 1px solid var(--border); align-items: center;
+}
+.dash-row:last-child { border-bottom: none; }
+.dash-journey {
+  font-family: var(--serif); font-size: 13px;
+  color: var(--navy); font-weight: 600; line-height: 1.35;
+}
+.dash-note {
+  font-family: var(--serif); font-size: 12px;
+  color: var(--ink-mid); line-height: 1.5; font-weight: 300;
+}
+.status-tag {
+  font-size: 10px; font-weight: 600; padding: 4px 10px;
+  border-radius: 20px; white-space: nowrap;
+  text-align: center; line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+.tag-red    { background: var(--rust-bg);  color: var(--rust); }
+.tag-yellow { background: var(--amber-bg); color: #8a6900; }
+.tag-green  { background: var(--green-bg); color: var(--green); }
+
+/* ══ SITUASJONS-PANEL ══ */
+.sit-panel {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden; margin-top: 16px;
+}
+.sit-top {
+  background: var(--navy-bg); padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 12px;
+}
+.sit-top-label {
+  font-family: var(--serif); font-size: 10px;
+  font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy); margin-bottom: 3px;
+}
+.sit-top-title {
+  font-family: var(--serif); font-size: 20px;
+  font-weight: 800; color: var(--navy);
+}
+.sit-body { display: grid; grid-template-columns: 1fr 1fr; }
+.sit-col { padding: 16px 20px; border-right: 1px solid var(--border); }
+.sit-col:last-child { border-right: none; }
+.sit-flags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.flag-chip {
+  font-size: 10px; font-weight: 600; padding: 3px 9px;
+  border-radius: 20px; background: var(--rust-bg); color: var(--rust);
+}
+.flag-chip.amber { background: var(--amber-bg); color: #8a6900; }
+.sit-human {
+  font-family: var(--serif); font-size: 12px;
+  font-style: italic; color: var(--ink-mid);
+  border-left: 3px solid var(--sage); padding-left: 10px;
+  margin-bottom: 10px; line-height: 1.6;
+}
+.sit-list { list-style: none; }
+.sit-list li {
+  font-family: var(--serif); font-size: 12px;
+  color: var(--ink-mid); padding: 5px 0 5px 14px;
+  border-bottom: 1px solid var(--border);
+  position: relative; line-height: 1.5; font-weight: 300;
+}
+.sit-list li::before { content: "·"; position: absolute; left: 3px; color: var(--navy); font-weight: 700; }
+.sit-list li:last-child { border-bottom: none; }
+
+.mov-title {
+  font-family: var(--serif); font-size: 13px;
+  font-weight: 700; color: var(--navy); margin-bottom: 8px;
+}
+.mov-row {
+  display: grid; grid-template-columns: 1fr 30px 30px;
+  gap: 4px; padding: 6px 0;
+  border-bottom: 1px solid var(--border); align-items: center;
+}
+.mov-row:last-child { border-bottom: none; }
+.mov-label { font-family: var(--serif); font-size: 11px; color: var(--ink-mid); line-height: 1.3; font-weight: 300; }
+.mov-head {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--ink-dim); text-align: right; font-weight: 600;
+}
+.mov-num {
+  font-family: var(--serif); font-size: 15px; font-weight: 700;
+  text-align: right; color: var(--ink-mid);
+}
+.mov-num.down { color: var(--rust); }
+.mov-num.up   { color: var(--green); }
+.mov-note {
+  font-family: var(--serif); font-size: 11px;
+  font-style: italic; color: var(--rust); margin-top: 8px; line-height: 1.5;
+}
+.mov-note.amber { color: #8a6900; }
+
+/* ══ VEIVALG-KORT ══ */
+.vv-list { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
+.vv-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden; cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.vv-card:hover { box-shadow: 0 2px 14px rgba(1,57,82,0.1); }
+.vv-card.open  { box-shadow: 0 3px 18px rgba(1,57,82,0.12); }
+.vv-political  { border-color: rgba(241,190,72,0.4); background: var(--amber-bg); }
+
+.vv-summary {
+  display: flex; align-items: center;
+  justify-content: space-between; padding: 14px 18px; gap: 12px;
+}
+.vv-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.vv-letter {
+  font-family: var(--hand); font-size: 30px;
+  color: var(--navy); line-height: 1;
+  flex-shrink: 0; width: 32px; text-align: center;
+}
+.vv-name {
+  font-family: var(--serif); font-size: 14px;
+  font-weight: 700; color: var(--navy); line-height: 1.3;
+}
+.vv-tagline {
+  font-family: var(--serif); font-size: 11px;
+  color: var(--ink-dim); margin-top: 2px; line-height: 1.4;
+  font-weight: 300;
+}
+.vv-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.vv-tag {
+  font-size: 10px; font-weight: 600; padding: 3px 9px;
+  border-radius: 20px; white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.vv-tag-red   { background: var(--rust-bg);  color: var(--rust); }
+.vv-tag-amber { background: var(--amber-bg); color: #8a6900; }
+.vv-tag-green { background: var(--green-bg); color: var(--green); }
+
+.vv-chevron {
+  font-size: 20px; color: var(--ink-dim);
+  transition: transform 0.25s; line-height: 1;
+  font-weight: 300;
+}
+.vv-card.open .vv-chevron { transform: rotate(90deg); }
+
+.vv-detail {
+  display: none; border-top: 1px solid var(--border);
+  padding: 16px 18px 18px;
+}
+.vv-card.open .vv-detail { display: block; }
+
+.vv-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.vv-section-label {
+  font-family: var(--serif); font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.13em;
+  color: var(--ink-dim); margin-bottom: 5px; font-weight: 600;
+}
+.vv-text {
+  font-family: var(--serif); font-size: 12px;
+  color: var(--ink-mid); line-height: 1.65; font-weight: 300;
+}
+.vv-dilemma {
+  background: var(--navy-bg); border-left: 3px solid var(--navy);
+  border-radius: 0 12px 12px 0; padding: 12px 14px;
+  font-family: var(--serif); font-size: 13px;
+  font-style: italic; color: var(--navy);
+  line-height: 1.6; height: 100%;
+}
+.vv-dilemma-label {
+  font-style: normal; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.13em;
+  color: var(--navy); margin-bottom: 7px;
+  font-weight: 700; opacity: 0.65;
+}
+.vv-meta { margin-top: 14px; }
+
+/* ══ SPØRSMÅL-BLOKK ══ */
+.q-block {
+  background: var(--navy); border-radius: 18px;
+  padding: 30px 28px; margin-top: 20px;
+}
+.q-eyebrow {
+  font-family: var(--hand); font-size: 18px;
+  color: rgba(255,255,255,0.55); margin-bottom: 18px;
+  letter-spacing: 0.04em;
+}
+.q-item {
+  display: grid; grid-template-columns: 26px 1fr; gap: 14px;
+  padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.12);
+  align-items: start;
+}
+.q-item:last-child { border-bottom: none; }
+.q-num {
+  font-family: var(--hand); font-size: 22px;
+  color: rgba(255,255,255,0.3); line-height: 1.4;
+}
+.q-text {
+  font-family: var(--serif); font-size: 15px;
+  font-style: italic; color: #fff; line-height: 1.55;
+  font-weight: 300;
+}
+
+/* ══ EIT-GRID ══ */
+.own-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-top: 20px;
+}
+.own-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 18px 16px;
+}
+.own-title {
+  font-family: var(--serif); font-size: 15px;
+  font-weight: 700; color: var(--navy); margin-bottom: 8px;
+}
+.own-desc {
+  font-family: var(--serif); font-size: 12px;
+  color: var(--ink-mid); line-height: 1.65; font-weight: 300;
+}
+
+/* RESPONSIVT */
+@media (max-width: 600px) {
+  .slide-inner { padding: 48px 20px 80px; }
+  .three-col, .goals-grid, .movement-steps,
+  .levels-grid, .own-grid { grid-template-columns: 1fr 1fr; }
+  .sit-body { grid-template-columns: 1fr; }
+  .dash-row { grid-template-columns: 1fr auto; }
+  .dash-note { display: none; }
+  .system-flow { flex-direction: column; }
+  .sf-arrow { display: none; }
+  .nav-dots { right: 8px; }
+  .vv-cols { grid-template-columns: 1fr; }
+}
+@media (max-width: 400px) {
+  .goals-grid, .own-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav-dots">
+  <button class="nav-dot active" data-slide="0"><span class="nav-dot-tooltip">Forside</span></button>
+  <button class="nav-dot" data-slide="1"><span class="nav-dot-tooltip">Systemskiftet</span></button>
+  <button class="nav-dot" data-slide="2"><span class="nav-dot-tooltip">Problemet i dag</span></button>
+  <button class="nav-dot" data-slide="3"><span class="nav-dot-tooltip">Fire mål</span></button>
+  <button class="nav-dot" data-slide="4"><span class="nav-dot-tooltip">Den nye riggen</span></button>
+  <button class="nav-dot" data-slide="5"><span class="nav-dot-tooltip">Bevegelse</span></button>
+  <button class="nav-dot" data-slide="6"><span class="nav-dot-tooltip">Tre nivåer</span></button>
+  <button class="nav-dot" data-slide="7"><span class="nav-dot-tooltip">Dashboard</span></button>
+  <button class="nav-dot" data-slide="8"><span class="nav-dot-tooltip">Situasjon 1</span></button>
+  <button class="nav-dot" data-slide="9"><span class="nav-dot-tooltip">Situasjon 2</span></button>
+  <button class="nav-dot" data-slide="10"><span class="nav-dot-tooltip">Beslutning</span></button>
+  <button class="nav-dot" data-slide="11"><span class="nav-dot-tooltip">Hva KLG må eie</span></button>
+</nav>
+
+<div class="slides" id="slides">
+
+<!-- ══ 0: HERO ══ -->
+<section class="slide slide-hero" data-index="0">
+  <div class="slide-inner">
+    <div class="hero-kicker">Fremtidsscenario · KLG · 2028</div>
+    <h1>Veien <span class="hand">inn</span></h1>
+    <p class="hero-sub">Det er det første styringsmøtet med et nytt felles bilde av reisen fra oppvekst til arbeid. Dere er ikke her for å bli orientert — dere er her for å prioritere.</p>
+    <div class="hero-facts">
+      <div class="fact"><div class="fact-label">Dato</div><div class="fact-value">14.01.2028</div></div>
+      <div class="fact"><div class="fact-label">Tid</div><div class="fact-value">08:30</div></div>
+      <div class="fact"><div class="fact-label">Sted</div><div class="fact-value">KLG</div></div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(0)">↓ Begynn</button>
+</section>
+
+<!-- ══ 1: SYSTEMSKIFTET ══ -->
+<section class="slide" data-index="1">
+  <div class="slide-inner">
+    <div class="slide-tag">Systemskiftet</div>
+    <h2>Vi har sluttet å behandle utenforskap som <span class="hand">summen av enkelttiltak</span></h2>
+    <p class="lead">I 2028 har kommunen bygget en felles rigg: tjenester som ser de samme signalene, jobber mot de samme målene og lærer av det som skjer på tvers.</p>
+    <div class="callout">Det handler ikke om mer innsats. Det handler om å koble innsatsen bedre — slik at barn, unge og familier slipper å være prosjektleder for eget liv.</div>
+    <p>Denne riggen ble ikke til over natten. Den ble til fordi ledelsen tok et bevisst valg om å styre på tvers — ikke bare følge opp innenfor egne sektorer.</p>
+  </div>
+  <button class="next-btn" onclick="goNext(1)">↓ Neste</button>
+</section>
+
+<!-- ══ 2: PROBLEMET ══ -->
+<section class="slide" data-index="2">
+  <div class="slide-inner">
+    <div class="slide-tag">Problemet — ikke mangel på innsats</div>
+    <h2>Mange gjør mye godt. <span class="hand">Men ikke alltid sammen.</span></h2>
+    <p class="lead">Skolen ser fravær. NAV ser ytelser. Helse ser belastning. Barnevernet ser familieforhold. Alle har rett i det de ser — men ingen ser hele bildet.</p>
+    <div class="three-col">
+      <div class="col-card">
+        <div class="col-icon">👁</div>
+        <div class="col-title">Skolen oppdager</div>
+        <ul class="col-list">
+          <li>Fravær og karakterfall</li>
+          <li>Atferdsendringer</li>
+          <li>Manglende deltakelse</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <div class="col-icon">🏥</div>
+        <div class="col-title">Helse og NAV oppdager</div>
+        <ul class="col-list">
+          <li>Psykisk belastning</li>
+          <li>Ytelsesavhengighet</li>
+          <li>Svak arbeidstilknytning</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <div class="col-icon">🏠</div>
+        <div class="col-title">Familie og bolig</div>
+        <ul class="col-list">
+          <li>Ustabil bosituasjon</li>
+          <li>Lavinntekt</li>
+          <li>Svakt nettverk</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px;">Resultatet er ikke mangel på tiltak — men tilfeldigheter i hvem som oppdager, hvem som kobler og hvem som følger opp.</div>
+  </div>
+  <button class="next-btn" onclick="goNext(2)">↓ Neste</button>
+</section>
+
+<!-- ══ 3: FIRE MÅL ══ -->
+<section class="slide" data-index="3">
+  <div class="slide-inner">
+    <div class="slide-tag">Fire felles mål</div>
+    <h2>Enkle nok til å <span class="hand">huskes</span></h2>
+    <p>Disse fire målene gjelder <em>hele</em> kommunen — ikke én sektor. De måler retning, ikke aktivitet.</p>
+    <div class="goals-grid">
+      <div class="goal-card g1">
+        <div class="goal-icon">🎓</div>
+        <div>
+          <div class="goal-num">01</div>
+          <div class="goal-title">Flere fullfører skoleløpet</div>
+          <div class="goal-meta">Fravær · karakterfall · overgang til VGS · fullført og bestått</div>
+        </div>
+      </div>
+      <div class="goal-card g2">
+        <div class="goal-icon">💼</div>
+        <div>
+          <div class="goal-num">02</div>
+          <div class="goal-title">Flere i arbeid, utdanning eller kvalifisering</div>
+          <div class="goal-meta">Sosialhjelp · AAP · praksis · overgang til jobb eller skole</div>
+        </div>
+      </div>
+      <div class="goal-card g3">
+        <div class="goal-icon">🏠</div>
+        <div>
+          <div class="goal-num">03</div>
+          <div class="goal-title">Flere familier får en stabil hverdag</div>
+          <div class="goal-meta">Bolig · økonomi · foreldres arbeid · samlet belastning</div>
+        </div>
+      </div>
+      <div class="goal-card g4">
+        <div class="goal-icon">👁</div>
+        <div>
+          <div class="goal-num">04</div>
+          <div class="goal-title">Flere tidlige tegn oppdages og følges opp</div>
+          <div class="goal-meta">Røde flagg · responstid · felles plan · ansvarlig kontakt</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(3)">↓ Neste</button>
+</section>
+
+<!-- ══ 4: DEN NYE RIGGEN ══ -->
+<section class="slide" data-index="4">
+  <div class="slide-inner">
+    <div class="slide-tag">Den nye riggen</div>
+    <h2>Slik virker <span class="hand">systemet</span></h2>
+    <p>Kommunen bruker tre typer kunnskap samlet. Risikoindikatorer og røde flagg er ikke separate lister — de er signaler som mates inn i en felles vurdering av hvor en familie eller ungdom befinner seg akkurat nå.</p>
+    <div class="system-model">
+      <div class="system-flow">
+        <div class="sf-block">
+          <div class="sf-label">Signal 1 · Bakgrunn</div>
+          <div class="sf-title">Risikoindikatorer</div>
+          <div class="sf-chips">
+            <span class="sf-chip">Lavinntekt</span>
+            <span class="sf-chip">Foreldre uten arbeid</span>
+            <span class="sf-chip">Ustabil bolig</span>
+            <span class="sf-chip">Barnevernerfaring</span>
+          </div>
+        </div>
+        <div class="sf-arrow">+</div>
+        <div class="sf-block">
+          <div class="sf-label">Signal 2 · Observasjon</div>
+          <div class="sf-title">Røde flagg</div>
+          <div class="sf-chips">
+            <span class="sf-chip rust">Fravær</span>
+            <span class="sf-chip rust">Karakterfall</span>
+            <span class="sf-chip rust">Skolevegring</span>
+            <span class="sf-chip rust">Søker ikke VGS</span>
+          </div>
+        </div>
+        <div class="sf-arrow">→</div>
+        <div class="sf-block">
+          <div class="sf-label">Samlet vurdering</div>
+          <div class="sf-title">Bevegelse</div>
+          <div class="sf-chips">
+            <span class="sf-chip rust">Uholdbar</span>
+            <span class="sf-chip amber">Utsatt</span>
+            <span class="sf-chip green">Stabil</span>
+            <span class="sf-chip green">Bærekraftig</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-dim);font-style:italic;font-family:var(--serif);font-weight:300;">Spørsmålet er ikke bare «hvor er risikoen?» — men «beveger situasjonen seg i riktig retning?»</p>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(4)">↓ Neste</button>
+</section>
+
+<!-- ══ 5: BEVEGELSE ══ -->
+<section class="slide" data-index="5">
+  <div class="slide-inner">
+    <div class="slide-tag">Bevegelseslogikken</div>
+    <h2>Fra situasjon til <span class="hand">endring</span></h2>
+    <p>Inspirert av Asker-logikken. Poenget er ikke å telle tiltak — men å se om situasjonen faktisk <em>beveger seg</em> mot en mer bærekraftig hverdag.</p>
+    <div class="movement-track">
+      <div class="movement-spine"><div class="movement-fill"></div></div>
+      <div class="movement-steps">
+        <div class="m-step">
+          <div class="m-dot m-dot-rust"></div>
+          <div class="m-badge m-rust-b">Uholdbar</div>
+          <div class="m-title">Akutt</div>
+          <div class="m-desc">Uten bolig · alvorlig fravær · ingen ansvarlig tjeneste</div>
+        </div>
+        <div class="m-step">
+          <div class="m-dot m-dot-amber"></div>
+          <div class="m-badge m-amber-b">Utsatt</div>
+          <div class="m-title">Fungerer delvis</div>
+          <div class="m-desc">Lavinntekt · økende fravær · ingen felles plan</div>
+        </div>
+        <div class="m-step">
+          <div class="m-dot m-dot-mid"></div>
+          <div class="m-badge m-mid-b">Stabil</div>
+          <div class="m-title">Håndterbar</div>
+          <div class="m-desc">Fast bolig · redusert fravær · ansvarlig kontakt</div>
+        </div>
+        <div class="m-step">
+          <div class="m-dot m-dot-green"></div>
+          <div class="m-badge m-green-b">Bærekraftig</div>
+          <div class="m-title">Fungerer</div>
+          <div class="m-desc">Robust nettverk · stabil deltakelse · lavt hjelpebehov</div>
+        </div>
+      </div>
+      <div class="movement-arrows">
+        <span class="m-arrow">→</span>
+        <span class="m-arrow">→</span>
+        <span class="m-arrow">→</span>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(5)">↓ Neste</button>
+</section>
+
+<!-- ══ 6: TRE NIVÅER ══ -->
+<section class="slide" data-index="6">
+  <div class="slide-inner">
+    <div class="slide-tag">Hva endrer seg</div>
+    <h2>Systemet virker på <span class="hand">tre nivåer</span></h2>
+    <p>Riggen er ikke et rapporteringsverktøy — den er ment å endre hverdagen for folk på alle nivåer i kommunen.</p>
+    <div class="levels-grid">
+      <div class="level-card">
+        <div class="level-who">For innbyggeren</div>
+        <div class="level-point">Slipper å forklare situasjonen sin på nytt til hver tjeneste</div>
+        <div class="level-point">Kobles til riktig hjelp tidligere — ikke etter at krisen er et faktum</div>
+        <div class="level-point">Følges av én ansvarlig kontakt gjennom overganger</div>
+      </div>
+      <div class="level-card">
+        <div class="level-who">For de ansatte</div>
+        <div class="level-point">Felles signaler gjør det enklere å handle tidlig</div>
+        <div class="level-point">Tydeligere ansvar — hvem gjør hva, når</div>
+        <div class="level-point">Bedre støtte til å prioritere ressursene der de trengs mest</div>
+      </div>
+      <div class="level-card">
+        <div class="level-who">For ledelsen</div>
+        <div class="level-point">Et styringsbilde som viser hele reisen — ikke bare egne sektormål</div>
+        <div class="level-point">Mulighet til å prioritere på tvers, ikke bare følge opp nedover</div>
+        <div class="level-point">Læring fra det som virker — og det som ikke virker</div>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(6)">↓ Neste</button>
+</section>
+
+<!-- ══ 7: DASHBOARD ══ -->
+<section class="slide" data-index="7">
+  <div class="slide-inner">
+    <div class="slide-tag">Dashboardet — 2028</div>
+    <h2>Styringsbildet <span class="hand">på bordet</span></h2>
+    <p class="lead">Systemet er bedre enn noe som har eksistert før. Men det demper kriser uten å skape varig bevegelse. Det er det dere skal ta stilling til nå.</p>
+    <div class="dash">
+      <div class="dash-head"><div class="dash-head-title">Veien inn — oversikt</div></div>
+      <div class="dash-row">
+        <div class="dash-journey">Familie / oppvekst</div>
+        <div class="dash-note">Mange løftes fra uholdbar til utsatt. Få videre til stabil.</div>
+        <span class="status-tag tag-yellow">Krise dempet,<br>lite varig endring</span>
+      </div>
+      <div class="dash-row">
+        <div class="dash-journey">Barnehage / barneskole</div>
+        <div class="dash-note">Flere bekymringer fanges tidlig. Felles vurdering og plan.</div>
+        <span class="status-tag tag-yellow">Bedring,<br>men skjørt</span>
+      </div>
+      <div class="dash-row">
+        <div class="dash-journey">Ungdomsskole</div>
+        <div class="dash-note">Fravær og karakterfall øker. Mange i utsatt situasjon.</div>
+        <span class="status-tag tag-red">Feil retning —<br>knekkpunkt</span>
+      </div>
+      <div class="dash-row">
+        <div class="dash-journey">VGS-overgang</div>
+        <div class="dash-note">Flere søker ikke, møter ikke opp eller slutter tidlig.</div>
+        <span class="status-tag tag-red">Svak overgang —<br>mange faller av</span>
+      </div>
+      <div class="dash-row">
+        <div class="dash-journey">NAV / ung voksen</div>
+        <div class="dash-note">Flere unge får aktivitet, men mange uten progresjon.</div>
+        <span class="status-tag tag-yellow">Aktivisert,<br>ikke kvalifisert</span>
+      </div>
+      <div class="dash-row">
+        <div class="dash-journey">Arbeid / kvalifisering</div>
+        <div class="dash-note">Flere arbeidsgivere tilbyr praksis. Flere går videre.</div>
+        <span class="status-tag tag-green">Fungerer —<br>god bevegelse</span>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(7)">↓ Neste</button>
+</section>
+
+<!-- ══ 8: SITUASJON 1 ══ -->
+<section class="slide" data-index="8">
+  <div class="slide-inner">
+    <div class="slide-tag">Situasjon 1</div>
+    <h2>Ungdomsskole–<span class="hand">VGS-glippen</span></h2>
+    <p>Røde flagg har vært synlige lenge — men bevegelsen uteblir akkurat idet ungdommene nærmer seg VGS. Er dette et skoleproblem, eller et systemproblem?</p>
+    <div class="sit-panel">
+      <div class="sit-top">
+        <div>
+          <div class="sit-top-label">Knekkpunkt</div>
+          <div class="sit-top-title">8.–10. trinn → VGS</div>
+        </div>
+        <span class="status-tag tag-red">Feil retning</span>
+      </div>
+      <div class="sit-body">
+        <div class="sit-col">
+          <div class="sit-flags">
+            <span class="flag-chip">fravær</span>
+            <span class="flag-chip">karakterfall</span>
+            <span class="flag-chip">skolevegring</span>
+            <span class="flag-chip">ikke VGS</span>
+          </div>
+          <p class="sit-human">Mange av dem hadde greie karakterer i 7. trinn og ingen aktiv bekymring i systemet. Frakoblingen skjer gradvis — og uten at noen eier overgangen.</p>
+          <ul class="sit-list">
+            <li>Bekymringsfullt fravær fra 8.–10. trinn øker</li>
+            <li>Fravær + lav mestring + karakterfall samvirker</li>
+            <li>Flere søker ikke VGS, møter ikke opp eller slutter tidlig</li>
+            <li>Tiltak kommer sent og er for skoleinterne</li>
+          </ul>
+        </div>
+        <div class="sit-col">
+          <div class="mov-title">Bevegelsesmåling</div>
+          <div class="mov-row"><span></span><span class="mov-head">2027</span><span class="mov-head">2028</span></div>
+          <div class="mov-row"><span class="mov-label">Uholdbar skolehverdag</span><span class="mov-num">28</span><span class="mov-num down">34</span></div>
+          <div class="mov-row"><span class="mov-label">Utsatt skolehverdag</span><span class="mov-num">116</span><span class="mov-num down">142</span></div>
+          <div class="mov-row"><span class="mov-label">Stabil skolehverdag</span><span class="mov-num">82</span><span class="mov-num up">76</span></div>
+          <div class="mov-row"><span class="mov-label">Bærekraftig deltakelse</span><span class="mov-num">49</span><span class="mov-num up">45</span></div>
+          <p class="mov-note">Flere fanges opp — men færre beveger seg til stabil skolehverdag.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(8)">↓ Neste</button>
+</section>
+
+<!-- ══ 9: SITUASJON 2 ══ -->
+<section class="slide" data-index="9">
+  <div class="slide-inner">
+    <div class="slide-tag">Situasjon 2</div>
+    <h2>Familier med <span class="hand">sammensatt risiko</span></h2>
+    <p>Systemet er blitt bedre til å dempe akutte kriser. Men for mange familier forblir hverdagen ustabil — og det preger barna gjennom hele reisen.</p>
+    <div class="sit-panel">
+      <div class="sit-top">
+        <div>
+          <div class="sit-top-label">Mønster tidlig i reisen</div>
+          <div class="sit-top-title">Familie / oppvekst</div>
+        </div>
+        <span class="status-tag tag-yellow">Krise dempet</span>
+      </div>
+      <div class="sit-body">
+        <div class="sit-col">
+          <div class="sit-flags">
+            <span class="flag-chip amber">lavinntekt</span>
+            <span class="flag-chip amber">ustabil bolig</span>
+            <span class="flag-chip amber">svakt nettverk</span>
+            <span class="flag-chip">fravær</span>
+          </div>
+          <p class="sit-human">Foreldrene har gjort alt rett — møtt til alle avtaler, takket ja til hjelp. Men hjelpen har kommet én tjeneste av gangen, uten en samlet plan.</p>
+          <ul class="sit-list">
+            <li>Lavinntekt, trangboddhet eller ustabil bolig er utbredt</li>
+            <li>Noen i fare for utkastelse eller midlertidige løsninger</li>
+            <li>Foreldre med svak arbeidstilknytning og/eller helseutfordringer</li>
+            <li>Barn i disse familiene har oftere fravær og lav fritidsdeltakelse</li>
+          </ul>
+        </div>
+        <div class="sit-col">
+          <div class="mov-title">Bevegelsesmåling</div>
+          <div class="mov-row"><span></span><span class="mov-head">2027</span><span class="mov-head">2028</span></div>
+          <div class="mov-row"><span class="mov-label">Uholdbar familiesituasjon</span><span class="mov-num">44</span><span class="mov-num up">31</span></div>
+          <div class="mov-row"><span class="mov-label">Utsatt familiesituasjon</span><span class="mov-num">108</span><span class="mov-num down">137</span></div>
+          <div class="mov-row"><span class="mov-label">Stabil familiesituasjon</span><span class="mov-num">72</span><span class="mov-num up">84</span></div>
+          <div class="mov-row"><span class="mov-label">Bærekraftig familiesituasjon</span><span class="mov-num">26</span><span class="mov-num up">29</span></div>
+          <p class="mov-note amber">Systemet demper akutt risiko — men skaper ikke nok varig stabilitet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(9)">↓ Neste</button>
+</section>
+
+<!-- ══ 10: BESLUTNING ══ -->
+<section class="slide" data-index="10" style="min-height:100vh;">
+  <div class="slide-inner" style="justify-content:flex-start;padding-top:56px;">
+    <div class="slide-tag">Beslutningsbildet</div>
+    <h2>Fem <span class="hand">veivalg</span></h2>
+    <p>KLG kan ikke velge alt. Hvert veivalg har et reelt dilemma. Les oversikten — utvid for å gå i dybden.</p>
+
+    <div class="vv-list">
+
+      <div class="vv-card" onclick="toggleVV(this)">
+        <div class="vv-summary">
+          <div class="vv-left">
+            <span class="vv-letter">1</span>
+            <div>
+              <div class="vv-name">Nærværsløftet 8–10</div>
+              <div class="vv-tagline">Mer kapasitet til fraværsarbeid på ungdomstrinnet</div>
+            </div>
+          </div>
+          <div class="vv-right">
+            <span class="vv-tag vv-tag-red">Knekkpunkt</span>
+            <span class="vv-chevron">›</span>
+          </div>
+        </div>
+        <div class="vv-detail">
+          <div class="vv-cols">
+            <div>
+              <div class="vv-section-label">Situasjonen</div>
+              <p class="vv-text">Kommunen har allerede fraværsteam og kompetanse. Skolene melder at behovet øker, særlig på ungdomstrinnet. Forslaget er å forsterke med mer kapasitet til rask kartlegging og tettere oppfølging.</p>
+              <div class="vv-section-label" style="margin-top:12px;">Men dashboardet viser</div>
+              <p class="vv-text">Mange elever med høyt fravær har også andre belastninger: lav familieøkonomi, ustabil bosituasjon, psykiske helseutfordringer. Fraværet er ofte et synlig tegn — ikke selve problemet.</p>
+            </div>
+            <div>
+              <div class="vv-dilemma">
+                <div class="vv-dilemma-label">Det egentlige veivalget</div>
+                Skal vi sette mer kapasitet inn der symptomet er tydeligst — eller rigge nærværsarbeidet som et felles ansvar på tvers av skole, helse, familie, fritid og VGS-overgang?
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vv-card" onclick="toggleVV(this)">
+        <div class="vv-summary">
+          <div class="vv-left">
+            <span class="vv-letter">2</span>
+            <div>
+              <div class="vv-name">Overgangsgarantien 10. trinn–VGS</div>
+              <div class="vv-tagline">Ansvarlig voksen gjennom overgangen fra ungdomsskole til VGS</div>
+            </div>
+          </div>
+          <div class="vv-right">
+            <span class="vv-tag vv-tag-red">Knekkpunkt</span>
+            <span class="vv-chevron">›</span>
+          </div>
+        </div>
+        <div class="vv-detail">
+          <div class="vv-cols">
+            <div>
+              <div class="vv-section-label">Situasjonen</div>
+              <p class="vv-text">Dashboardet viser et tydelig knekkpunkt i overgangen. Forslaget: elever med røde flagg identifiseres tidligere, følges gjennom sommeren og får en ansvarlig kontakt til de er etablert i VGS, arbeidstrening eller kvalifisering.</p>
+              <div class="vv-section-label" style="margin-top:12px;">Men dashboardet viser</div>
+              <p class="vv-text">Mange av ungdommene har vært kjent lenge. Fravær, lav mestring og karakterfall var synlig allerede i 8.–10. trinn. Starter innsatsen våren i 10. klasse, kan det være for sent.</p>
+            </div>
+            <div>
+              <div class="vv-dilemma">
+                <div class="vv-dilemma-label">Det egentlige veivalget</div>
+                Skal vi bygge et sterkt sikkerhetsnett rundt selve overgangen — eller flytte ressursene lenger tilbake i løpet for å hindre at overgangen blir kritisk?
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vv-card" onclick="toggleVV(this)">
+        <div class="vv-summary">
+          <div class="vv-left">
+            <span class="vv-letter">3</span>
+            <div>
+              <div class="vv-name">Familiepakken Stabil Hverdag</div>
+              <div class="vv-tagline">Samlet innsats rundt familier med sammensatt risiko</div>
+            </div>
+          </div>
+          <div class="vv-right">
+            <span class="vv-tag vv-tag-amber">Forebygging</span>
+            <span class="vv-chevron">›</span>
+          </div>
+        </div>
+        <div class="vv-detail">
+          <div class="vv-cols">
+            <div>
+              <div class="vv-section-label">Situasjonen</div>
+              <p class="vv-text">Flere familier lever med sammensatt risiko: lavinntekt, ustabil bolig, svak arbeidstilknytning og barn med økt fravær. Forslaget er en samlet innsats der bolig, økonomi, arbeid, skole og helse kobles rundt familiene.</p>
+              <div class="vv-section-label" style="margin-top:12px;">Men dashboardet viser</div>
+              <p class="vv-text">Kommunen klarer å dempe akutte kriser. Færre er i «uholdbar situasjon». Men mange blir stående lenge i «utsatt» uten å bevege seg videre til stabil hverdag.</p>
+            </div>
+            <div>
+              <div class="vv-dilemma">
+                <div class="vv-dilemma-label">Det egentlige veivalget</div>
+                Skal vi prioritere dybde rundt familier med sammensatt risiko — eller spre ressursene bredere på flere enkelttiltak?
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vv-card" onclick="toggleVV(this)">
+        <div class="vv-summary">
+          <div class="vv-left">
+            <span class="vv-letter">4</span>
+            <div>
+              <div class="vv-name">Jobbsporet 16–24</div>
+              <div class="vv-tagline">Partnerskap med arbeidsgivere for unge utenfor skole og arbeid</div>
+            </div>
+          </div>
+          <div class="vv-right">
+            <span class="vv-tag vv-tag-green">Lovende</span>
+            <span class="vv-chevron">›</span>
+          </div>
+        </div>
+        <div class="vv-detail">
+          <div class="vv-cols">
+            <div>
+              <div class="vv-section-label">Situasjonen</div>
+              <p class="vv-text">NAV, næring og fylkeskommunen får mulighet til partnerskap med lokale arbeidsgivere. Målet: raskere tilgang til praksis, arbeidstrening og deltidsjobb — med tett oppfølging fra kommunen.</p>
+              <div class="vv-section-label" style="margin-top:12px;">Men dashboardet viser</div>
+              <p class="vv-text">Arbeidsgiverrettede tiltak ser lovende ut. Flere unge kommer videre etter praksis når oppfølgingen er god. Men mange unge kommer inn i disse tiltakene etter at de allerede har falt ut av skoleløpet.</p>
+            </div>
+            <div>
+              <div class="vv-dilemma">
+                <div class="vv-dilemma-label">Det egentlige veivalget</div>
+                Skal vi styrke veien inn i arbeid for dem som allerede har falt ut — eller bruke mer av midlene på å hindre at de faller ut i utgangspunktet?
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vv-card vv-political" onclick="toggleVV(this)">
+        <div class="vv-summary">
+          <div class="vv-left">
+            <span class="vv-letter" style="color:var(--amber);">5</span>
+            <div>
+              <div class="vv-name">Fritid for Alle — politisk vedtatt</div>
+              <div class="vv-tagline">Flere barn i organiserte fritidsaktiviteter, uavhengig av økonomi</div>
+            </div>
+          </div>
+          <div class="vv-right">
+            <span class="vv-tag vv-tag-amber">Politisk vedtatt</span>
+            <span class="vv-chevron">›</span>
+          </div>
+        </div>
+        <div class="vv-detail">
+          <div class="vv-cols">
+            <div>
+              <div class="vv-section-label">Situasjonen</div>
+              <p class="vv-text">Politikerne har vedtatt satsingen. Bred støtte, lett å kommunisere og treffer en kjent utfordring: mange barn i utsatte familier står utenfor fritidsarenaer.</p>
+              <div class="vv-section-label" style="margin-top:12px;">Men dashboardet viser</div>
+              <p class="vv-text">Lav fritidsdeltakelse henger ofte sammen med økonomi, transport, foreldrekapasitet, helse og sosial trygghet. En støtteordning alene treffer ikke nødvendigvis de barna som trenger det mest.</p>
+            </div>
+            <div>
+              <div class="vv-dilemma">
+                <div class="vv-dilemma-label">Det egentlige veivalget</div>
+                Skal politisk vedtatte enkeltsatsinger styres inn i felles mål, dashboard og bevegelsesmåling — eller akseptere at gode tiltak lever på siden av den felles riggen?
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <button class="next-btn" onclick="goNext(10)">↓ Neste</button>
+</section>
+
+<!-- ══ 11: HVA KLG MÅ EIE ══ -->
+<section class="slide" data-index="11">
+  <div class="slide-inner">
+    <div class="slide-tag">Hva KLG må eie</div>
+    <h2>Dette er ikke en rapport. <span class="hand">Det er en rigg dere leder.</span></h2>
+    <p class="lead">Systemet virker bare hvis toppledelsen eier det. Ikke som et prosjekt som følges opp nedover — men som et felles styringsansvar på tvers.</p>
+    <div class="own-grid">
+      <div class="own-card">
+        <div class="own-title">Felles mål</div>
+        <div class="own-desc">De fire målene gjelder hele kommunen. KLG bekrefter at de er styrende — ikke rådgivende.</div>
+      </div>
+      <div class="own-card">
+        <div class="own-title">Felles måling</div>
+        <div class="own-desc">Bevegelsesmålingen er kommunens svar på om innsatsen virker. Den leses og drøftes på tvers — ikke bare i hver sektor.</div>
+      </div>
+      <div class="own-card">
+        <div class="own-title">Prioritering på tvers</div>
+        <div class="own-desc">Når dashboardet viser at noe ikke virker, er det KLG som beslutter hva som skal omprioriteres — og hva kommunen skal slutte å finansiere.</div>
+      </div>
+      <div class="own-card">
+        <div class="own-title">Felles læring</div>
+        <div class="own-desc">Riggen samler kunnskap om hva som skaper bevegelse. Den læringen tilhører hele kommunen — ikke enkeltprosjekter.</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px;">Dette er ikke fremtiden. Det er hva dere beslutter å bygge — nå.</div>
+    <div class="q-block">
+      <div class="q-eyebrow">Tre spørsmål å lande på</div>
+      <div class="q-item">
+        <span class="q-num">1</span>
+        <span class="q-text">Skal ressursene følge det politiske initiativet, de røde målingene — eller den langsiktige forebyggingslogikken?</span>
+      </div>
+      <div class="q-item">
+        <span class="q-num">2</span>
+        <span class="q-text">Hvilken bevegelse skal kommunen ha fått til om ett år — og hvem eier ansvaret for at det skjer?</span>
+      </div>
+      <div class="q-item">
+        <span class="q-num">3</span>
+        <span class="q-text">Hva må kommunen slutte å gjøre — eller slutte å si ja til — for at dette skal lykkes?</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const slidesEl = document.getElementById("slides");
+const dots = document.querySelectorAll(".nav-dot");
+const slideEls = document.querySelectorAll(".slide");
+
+dots.forEach(dot => {
+  dot.addEventListener("click", () => {
+    const idx = parseInt(dot.dataset.slide);
+    slideEls[idx]?.scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+function goNext(current) {
+  slideEls[current + 1]?.scrollIntoView({ behavior: "smooth" });
+}
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+      const idx = parseInt(entry.target.dataset.index);
+      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+      entry.target.classList.add("in-view");
+    }
+  });
+}, { threshold: 0.5 });
+
+slideEls.forEach(s => observer.observe(s));
+
+function toggleVV(card) {
+  const isOpen = card.classList.contains("open");
+  document.querySelectorAll(".vv-card.open").forEach(c => c.classList.remove("open"));
+  if (!isOpen) card.classList.add("open");
+}
+</script>
+</body>
+</html>
